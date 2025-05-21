@@ -9,11 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/:input", (req, res) => {
-  const { city } = req.params;
-
+app.get("/:city", (req, res) => {
   async function fetchWeather() {
     try {
+      const { city } = req.params;
       const response = await fetch(
         `http://api.weatherapi.com/v1/current.json?key=${process.env.KEY}&q=${city}&aqi=no`
       );
@@ -23,9 +22,10 @@ app.get("/:input", (req, res) => {
       }
 
       const result = await response.json();
-      res.status(200).send(result);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
+      res.status(500).json({ error: "Internal server error" });
     }
   }
   fetchWeather();

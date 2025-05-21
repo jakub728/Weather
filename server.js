@@ -9,11 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/:input", (req, res) => {
+  const { city } = req.params;
+
   async function fetchWeather() {
     try {
       const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=${process.env.KEY}&q=London&aqi=no`
+        `http://api.weatherapi.com/v1/current.json?key=${process.env.KEY}&q=${city}&aqi=no`
       );
 
       if (!response.ok) {
@@ -29,7 +31,7 @@ app.get("/", (req, res) => {
   fetchWeather();
 });
 
-app.post("/weather", (req, res) => {
+app.post("/weather/", (req, res) => {
   const { city } = req.body;
 
   if (!city) {
